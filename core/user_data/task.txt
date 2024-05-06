@@ -1,0 +1,52 @@
+Step 1: Personal Information
+
+What is your full name?
+What is your email address?
+What is your phone number?
+What is your current location (city, state, country)?
+Step 2: Education
+
+What is your highest level of education?
+Please specify your field of study/major.
+What is the name of the institution you attended?
+What was your graduation year?
+Step 3: Work Experience
+
+Have you had any previous work experience? (Yes/No)
+If yes, provide details for each position:
+Company name
+Job title
+Dates of employment (start and end dates)
+Description of responsibilities and achievements
+
+Step 4: Skills and Expertise
+
+Which programming languages are you proficient in? (Check all that apply)
+Python
+JavaScript
+Java
+C++
+etc.
+What other technical skills do you possess? (e.g., frameworks, tools, methodologies)
+Do you have any certifications or professional qualifications? (Yes/No)
+If yes, please specify.
+Step 5: Career Goals
+
+What type of job role are you targeting?
+Developer
+Designer
+Project Manager
+Analyst
+etc.
+What industry or sector are you interested in working in?
+What are your career aspirations or objectives?
+Step 6: Additional Information (Optional)
+
+Is there any additional information you would like to provide about yourself or your background? (Optional text field)
+Step 7: Review and Confirmation
+
+Please review the information you've provided. Make any necessary changes or corrections.
+Once you're satisfied with your responses, confirm your submission to proceed.
+These questions cover a range of essential topics, including personal information, education, work experience, skills, career goals, and additional details. You can customize and expand upon these questions based on your specific requirements and the needs of your users. Additionally, consider using conditional logic to dynamically adjust the wizard flow based on user responses for a more personalized experience.
+
+
