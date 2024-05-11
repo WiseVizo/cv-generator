@@ -8,7 +8,7 @@ class UserData(models.Model):
     phone_number = models.CharField(max_length=15)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
-    linkedin_link = models.URLField()
+    linkedin_link = models.URLField(blank=True)
 
     #education
     highest_education_lvl = models.CharField(max_length=200)
@@ -33,3 +33,5 @@ class UserData(models.Model):
     target_role = models.CharField(max_length=100)
     carrer_goals = models.CharField(max_length=400)
 
+    def __str__(self):
+        return self.full_name
