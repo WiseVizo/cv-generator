@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="{% static 'user_data/index_form.css' %}">
 </head>
 <body>
-    home page
+    <h1>User Data Form</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
 </body>
 </html>
