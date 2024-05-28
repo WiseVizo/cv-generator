@@ -11,9 +11,14 @@ class UserData(models.Model):
     linkedin_link = models.URLField(blank=True)
 
     #education
-    highest_education_lvl = models.CharField(max_length=200)
+    university_name = models.CharField(max_length=200)
     major_field = models.CharField(max_length=200)
     graduation_year = models.CharField(max_length=10) # maybe this should be date field 
+    course_name = models.CharField(max_length=100, default="BCA", blank=True)
+    gpa_out_of_5 = models.DecimalField(max_digits=4, decimal_places=2, default=3.5)
+    courses = models.TextField(blank=True)
+    projects = models.TextField(blank=True)
+    educational_achivements = models.TextField(blank=True)
 
     #work experience if any
     have_work_experience = models.BooleanField(default=False)
