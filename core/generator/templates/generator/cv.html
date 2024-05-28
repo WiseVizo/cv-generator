@@ -8,7 +8,12 @@
     <link rel="stylesheet" href="{% static 'generator/cv.css' %}">
 </head>
 <body>
-    cv here:
+    <p>{% for key, value in personal_details.items %}
+        {% if value %}
+        | {{value}}
+        {% endif %}
+        {% endfor %}|
+    </p>
     <br>
     <p>
     {{edu_section}}

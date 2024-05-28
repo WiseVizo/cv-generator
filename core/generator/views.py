@@ -26,7 +26,7 @@ def generate_resume(request):
     # Compose prompt
     prompt = f"""Generate an education section of resume based on the following user data in 60 words or more:\n\n{education_input_data}\n"""
 
-    edu_data = send_query_to_bot(conn, prompt)
+    # edu_data = send_query_to_bot(conn, prompt)
    
     # skills set & expertise 
     skills_and_expertise_input = {
@@ -35,17 +35,31 @@ def generate_resume(request):
         "non-tech skills": user_data.non_tech_skills,
     }
     prompt = f"""Generate skills set & experties section of resume based on the following user data in 60 words or more:\n\n{skills_and_expertise_input}\n"""
-    skill_data = send_query_to_bot(conn, prompt)
-    try: 
-        print(edu_data["msg"])
-        print(skill_data["msg"])
+    # skill_data = send_query_to_bot(conn, prompt)
+    # try: 
+    #     print(edu_data["msg"])
+    #     print(skill_data["msg"])
         
-    except Exception as e:
-        return HttpResponse("something went wrong :/ ")
-    context = {
-        "edu_section": edu_data["msg"],
-        "skills_section": skill_data["msg"],
+    # except Exception as e:
+    #     return HttpResponse("something went wrong :/ ")
+
+
+    personal_details = {
+        "full_name": user_data.full_name,
+        "email_address": user_data.email_address,
+        "phone_number": user_data.phone_number,
+        "city": user_data.city,
+        "state": user_data.state,
+        "linkedin_link": user_data.linkedin_link
     }
+
+
+    context = {
+        "personal_details": personal_details,
+        # "edu_section": edu_data["msg"],
+        # "skills_section": skill_data["msg"],
+    }
+    
 
 
     
@@ -86,4 +100,5 @@ def send_query_to_bot(conn, prompt):
     data = res.read()
     data = data.decode("utf-8")
     data = json.loads(data)
+    print(data)
     return data
