@@ -9,42 +9,32 @@ def generate_resume(request):
 
     # Prepare input data from UserData model
     user_data = UserData.objects.get(pk=1)  # Retrieve user data from database
-    input_data = {
-    "full_name": user_data.full_name,
-    "email_address": user_data.email_address,
-    "phone_number": user_data.phone_number,
-    "city": user_data.city,
-    "state": user_data.state,
-    "linkedin_link": user_data.linkedin_link,
-    "highest_education_lvl": user_data.highest_education_lvl,
-    "major_field": user_data.major_field,
-    "graduation_year": user_data.graduation_year,
-    "achievements": user_data.achivements,
-    "programming_languages": user_data.programming_languages,
-    "frameworks": user_data.frameworks,
-    "non_tech_skills": user_data.non_tech_skills,
-    "professional_qualifications": user_data.professional_qualifications,
-    "target_role": user_data.target_role,
-    "career_goals": user_data.carrer_goals,
+
+    # Education 
+    education_input_data = {
+        "university": user_data.university_name,
+        "major_field": user_data.major_field,
+        "graduation_year": user_data.graduation_year, 
+        "course_name": user_data.course_name,
+        "gpa out of 5": user_data.gpa_out_of_5,
+        "courses" : user_data.courses,
+        "projects": user_data.projects,
+        "achivements": user_data.educational_achivements,
     }
 
-    if user_data.have_work_experience:
-        input_data["company_name"] = user_data.company_name
-        input_data["job_title"] = user_data.job_title
-        input_data["date_joined"] = user_data.date_joined
-        input_data["date_quit"] = user_data.date_quit
-
-
-    
-    
-    
     # Compose prompt
-    prompt = f"Generate a resume based on the following user data:\n\n{input_data}\n"
+    prompt = f"""Generate an education section of resume based on the following user data in 60 words or more\n Guidelines:\n
+    1. Use only the details provided.
+    2. Do not add any new information or invent details.
+    3. Do not include other sections like Certifications or Professional Development if its not provided.
+    4. Keep the tone professional and suitable for a resume.
+    5. try to extend on provided info without naming something irrelevent.
+    6. Consider emphasizing how the courses and projects have contributed to the development of skills and why the individual would be a valuable asset to an organization. :\n\n{education_input_data}\n"""
 
     # Define the dictionary
     payload_dict = {
         "query": prompt,
-        "sysMsg": "You are an expert resume builder."
+        "sysMsg": "You are an expert resume builder and don't give any new lines in your response."
     }
 
     # Convert the dictionary to a JSON string
@@ -58,11 +48,14 @@ def generate_resume(request):
 
     # Send request 
     conn.request("POST", "/infinite-gpt", payload, headers)
+
     # Process response
     res = conn.getresponse()
     data = res.read()
     data = data.decode("utf-8")
     data = json.loads(data)
     print(data)
-    return render(request, "generator/cv.html", {"cv" : data})
-
+    context = {
+        "edu_section": data["msg"],
+    }
+    return render(request, "generator/cv.html", context=context)
