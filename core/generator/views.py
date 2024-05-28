@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 from user_data.models import UserData
 import http.client
 import json
@@ -23,26 +24,57 @@ def generate_resume(request):
     }
 
     # Compose prompt
-    prompt = f"""Generate an education section of resume based on the following user data in 60 words or more\n Guidelines:\n
+    prompt = f"""Generate an education section of resume based on the following user data in 60 words or more:\n\n{education_input_data}\n"""
+
+    edu_data = send_query_to_bot(conn, prompt)
+   
+    # skills set & expertise 
+    skills_and_expertise_input = {
+        "programming_languages": user_data.programming_languages,
+        "frameworks": user_data.frameworks,
+        "non-tech skills": user_data.non_tech_skills,
+    }
+    prompt = f"""Generate skills set & experties section of resume based on the following user data in 60 words or more:\n\n{skills_and_expertise_input}\n"""
+    skill_data = send_query_to_bot(conn, prompt)
+    try: 
+        print(edu_data["msg"])
+        print(skill_data["msg"])
+        
+    except Exception as e:
+        return HttpResponse("something went wrong :/ ")
+    context = {
+        "edu_section": edu_data["msg"],
+        "skills_section": skill_data["msg"],
+    }
+
+
+    
+   
+
+    return render(request, "generator/cv.html", context=context)
+
+
+def send_query_to_bot(conn, prompt):
+    
+    # Define the dictionary
+    payload_dict = {
+        "query": prompt,
+        "sysMsg": """You are an expert resume builder \n Guidelines:\n
     1. Use only the details provided.
     2. Do not add any new information or invent details.
     3. Do not include other sections like Certifications or Professional Development if its not provided.
     4. Keep the tone professional and suitable for a resume.
     5. try to extend on provided info without naming something irrelevent.
-    6. Consider emphasizing how the courses and projects have contributed to the development of skills and why the individual would be a valuable asset to an organization. :\n\n{education_input_data}\n"""
-
-    # Define the dictionary
-    payload_dict = {
-        "query": prompt,
-        "sysMsg": "You are an expert resume builder and don't give any new lines in your response."
+    6. Consider emphasizing how the courses and projects have contributed to the development of skills and why the individual would be a valuable asset to an organization. """
     }
 
     # Convert the dictionary to a JSON string
     payload = json.dumps(payload_dict)
     
+    
     headers = {
     'content-type': "application/json",
-    'X-RapidAPI-Key': "3b4b1ebc4bmsh15df51970321d69p1a6d26jsnefe9b5671e2c",
+    'X-RapidAPI-Key': "683286cb91msh20a74ff72f0bfe3p115e79jsnd8ecb7821a08",
     'X-RapidAPI-Host': "infinite-gpt.p.rapidapi.com"
     }
 
@@ -54,8 +86,4 @@ def generate_resume(request):
     data = res.read()
     data = data.decode("utf-8")
     data = json.loads(data)
-    print(data)
-    context = {
-        "edu_section": data["msg"],
-    }
-    return render(request, "generator/cv.html", context=context)
+    return data
