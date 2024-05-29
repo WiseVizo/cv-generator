@@ -111,7 +111,7 @@ def send_query_to_bot(conn, prompt):
     
     headers = {
     'content-type': "application/json",
-    'X-RapidAPI-Key': "683286cb91msh20a74ff72f0bfe3p115e79jsnd8ecb7821a08",
+    'X-RapidAPI-Key': "3b4b1ebc4bmsh15df51970321d69p1a6d26jsnefe9b5671e2c",
     'X-RapidAPI-Host': "infinite-gpt.p.rapidapi.com"
     }
 
