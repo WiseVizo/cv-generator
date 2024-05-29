@@ -9,7 +9,7 @@ def generate_resume(request):
     conn = http.client.HTTPSConnection("infinite-gpt.p.rapidapi.com")
 
     # Prepare input data from UserData model
-    user_data = UserData.objects.get(pk=1)  # Retrieve user data from database
+    user_data = UserData.objects.get(pk=request.session.get('user_id'))  # Retrieve user data from database
 
     # Education 
     education_input_data = {
