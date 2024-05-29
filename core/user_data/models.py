@@ -24,9 +24,14 @@ class UserData(models.Model):
     have_work_experience = models.BooleanField(default=False)
     company_name = models.CharField(max_length=100)
     job_title = models.CharField(max_length=150)
-    date_joinned = models.DateField() # wait whts is this data time field instead
-    date_quit = models.DateField()
-    achivements = models.CharField(max_length=300)
+    months_worked = models.IntegerField(default=0)  # Number of months worked
+    achievements = models.TextField(default="default")
+    responsibilities = models.TextField(default="default")
+    skills_utilized = models.CharField(max_length=300, default="python")
+    location = models.CharField(max_length=100)
+    supervisor_name = models.CharField(max_length=100, null=True, blank=True)
+    supervisor_contact = models.CharField(max_length=100, null=True, blank=True)
+    reason_for_leaving = models.CharField(max_length=300, null=True, blank=True)
 
     #Skills and Expertise
     programming_languages = models.CharField(max_length=350)
