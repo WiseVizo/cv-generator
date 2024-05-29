@@ -26,7 +26,7 @@ def generate_resume(request):
     # Compose prompt
     prompt = f"""Generate an education section of resume based on the following user data in 60 words or more:\n\n{education_input_data}\n"""
 
-    # edu_data = send_query_to_bot(conn, prompt)
+    edu_data = send_query_to_bot(conn, prompt)
    
     # skills set & expertise 
     skills_and_expertise_input = {
@@ -35,13 +35,34 @@ def generate_resume(request):
         "non-tech skills": user_data.non_tech_skills,
     }
     prompt = f"""Generate skills set & experties section of resume based on the following user data in 60 words or more:\n\n{skills_and_expertise_input}\n"""
-    # skill_data = send_query_to_bot(conn, prompt)
-    # try: 
-    #     print(edu_data["msg"])
-    #     print(skill_data["msg"])
+    skill_data = send_query_to_bot(conn, prompt)
+
+    work_data = None
+    #work experience 
+    if user_data.have_work_experience:
+        work_experience_input = {
+            "company name": user_data.company_name,
+            "job title" : user_data.job_title,
+            "number of months worked": user_data.months_worked,
+            "achivements": user_data.achievements,
+            "responsibilities": user_data.responsibilities,
+            "skills utilizied": user_data.skills_utilized,
+            "company location": user_data.location,
+            "reason for leaving": user_data.reason_for_leaving,
+        }
+        if user_data.supervisor_name:
+            work_experience_input["supervisor name"] = user_data.supervisor_name
+            work_experience_input["supervisor contact"] = user_data.supervisor_contact
+        prompt = f"""Generate work experience section of resume based on following user data in 60 words or more:\n\n{work_experience_input}"""
+        work_data = send_query_to_bot(conn, prompt)
+    try: 
+        print(edu_data["msg"])
+        print(skill_data["msg"])
+        if work_data:
+            print(work_data["msg"])
         
-    # except Exception as e:
-    #     return HttpResponse("something went wrong :/ ")
+    except Exception as e:
+        return HttpResponse("something went wrong :/ ")
 
 
     personal_details = {
@@ -56,10 +77,12 @@ def generate_resume(request):
 
     context = {
         "personal_details": personal_details,
-        # "edu_section": edu_data["msg"],
-        # "skills_section": skill_data["msg"],
+        "edu_section": edu_data["msg"],
+        "skills_section": skill_data["msg"],
     }
     
+    if work_data:
+        context["work_exp_section"] = work_data["msg"]
 
 
     
