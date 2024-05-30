@@ -3,14 +3,16 @@ from django.http import HttpResponse
 from user_data.models import UserData
 import http.client
 import json
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 # Create your views here.
 def generate_resume(request):
     
     conn = http.client.HTTPSConnection("infinite-gpt.p.rapidapi.com")
 
     # Prepare input data from UserData model
-    user_data = UserData.objects.get(pk=request.session.get('user_id'))  # Retrieve user data from database
-
+    user_data = UserData.objects.get(pk=1)  # Retrieve user data from database
+    #request.session.get('user_id')
     # Education 
     education_input_data = {
         "university": user_data.university_name,
@@ -84,7 +86,7 @@ def generate_resume(request):
     if work_data:
         context["work_exp_section"] = work_data["msg"]
 
-
+    request.session['resume_context'] = context  # Save context in session
     
    
 
@@ -109,12 +111,21 @@ def send_query_to_bot(conn, prompt):
     payload = json.dumps(payload_dict)
     
     
+    # headers = {
+    # 'content-type': "application/json",
+    # 'X-RapidAPI-Key': "3b4b1ebc4bmsh15df51970321d69p1a6d26jsnefe9b5671e2c",
+    # 'X-RapidAPI-Host': "infinite-gpt.p.rapidapi.com"
+    # }
+    # headers = {
+    # 'content-type': "application/json",
+    # 'X-RapidAPI-Key': "683286cb91msh20a74ff72f0bfe3p115e79jsnd8ecb7821a08",
+    # 'X-RapidAPI-Host': "infinite-gpt.p.rapidapi.com"
+    # }
     headers = {
     'content-type': "application/json",
-    'X-RapidAPI-Key': "3b4b1ebc4bmsh15df51970321d69p1a6d26jsnefe9b5671e2c",
+    'X-RapidAPI-Key': "71ecdfa449msh04dab0161cf281fp169d2cjsncf6653b932a9",
     'X-RapidAPI-Host': "infinite-gpt.p.rapidapi.com"
     }
-
     # Send request 
     conn.request("POST", "/infinite-gpt", payload, headers)
 
@@ -125,3 +136,22 @@ def send_query_to_bot(conn, prompt):
     data = json.loads(data)
     print(data)
     return data
+
+def download_resume_as_pdf(request):
+    context = request.session.get('resume_context')  # Load context from session
+    if not context:
+        return HttpResponse("Context not found in session", status=404)
+
+    template = get_template('generator/cv.html')
+    html_content = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="resume1.pdf"'
+
+    # HTML(string=html_content).write_pdf(response)
+    # config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+    # pdfkit.from_string(html_content, response.content, configuration=config)
+    pisa_status = pisa.CreatePDF(html_content, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Error generating PDF: %s' % pisa_status.err)
+    return response

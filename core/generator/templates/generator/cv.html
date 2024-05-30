@@ -5,26 +5,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume</title>
-    <link rel="stylesheet" href="{% static 'generator/cv.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'generator/cv.css' %}"> -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .resume-container {
+            width: 60%;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .contact-info {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .contact-info a {
+            color: #555;
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .section p {
+            margin: 0;
+            text-align: justify;
+        }
+
+        .no-print {
+            display: block;
+        }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>{% for key, value in personal_details.items %}
-        {% if value %}
-        | {{value}}
-        {% endif %}
-        {% endfor %}|
-    </p>
-    <br>
-    <p>
-    {{edu_section}}
-    </p>
-    <br>
-    <p>
-    {{skills_section}}
-    </p>
-    <br>
-    <p>
-    {{work_exp_section}}
-    </p>
+    <div class="resume-container">
+        <header>
+            <h1>{{ personal_details.full_name }}</h1>
+            <p class="contact-info">
+                {% if personal_details.email_address %}Email: {{ personal_details.email_address }}{% endif %}
+                {% if personal_details.phone_number %} | Phone: {{ personal_details.phone_number }}{% endif %}
+                {% if personal_details.city %} | City: {{ personal_details.city }}{% endif %}
+                {% if personal_details.state %} | State: {{ personal_details.state }}{% endif %}
+                {% if personal_details.linkedin_link %} | LinkedIn: <a href="{{ personal_details.linkedin_link }}" target="_blank">{{ personal_details.linkedin_link }}</a>{% endif %}
+            </p>
+        </header>
+        <section class="section education">
+            <h2>Education</h2>
+            <p>{{ edu_section }}</p>
+        </section>
+        <section class="section skills">
+            <h2>Skills</h2>
+            <p>{{ skills_section }}</p>
+        </section>
+        <section class="section work-experience">
+            <h2>Work Experience</h2>
+            <p>{{ work_exp_section }}</p>
+        </section>
+    </div>
+     <div class="download-btn-container">
+        <a href="{% url 'generate_resume_pdf' %}" class="btn btn-primary no-print">Download Resume as PDF</a>
+    </div>
 </body>
 </html>
